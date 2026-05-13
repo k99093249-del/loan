@@ -1,0 +1,62 @@
+{# Expects: analytics_nav in {'dashboard','data_overview','loan_applications','predict','customers','reports','alerts','model','settings'} #}
+<aside class="a-sidebar">
+  <div class="a-brand">
+    <div class="a-logo">🏛️</div>
+    <div>
+      <div class="a-brand-title">LoanPredict</div>
+      <div class="a-brand-sub">Analytics</div>
+    </div>
+  </div>
+
+  <nav class="a-nav">
+    <a class="a-nav-item{% if analytics_nav == 'dashboard' %} active{% endif %}" href="{{ url_for('analytics') }}">
+      <span class="ico">🏠</span><span>Dashboard</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'data_overview' %} active{% endif %}" href="{{ url_for('analytics_data_overview') }}">
+      <span class="ico">🧾</span><span>Data Overview</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'loan_applications' %} active{% endif %}" href="{{ url_for('analytics_loan_applications') }}">
+      <span class="ico">📄</span><span>Loan Applications</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'predict' %} active{% endif %}" href="{{ url_for('predict') }}">
+      <span class="ico">✨</span><span>Prediction</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'customers' %} active{% endif %}" href="{{ url_for('analytics_customers') }}">
+      <span class="ico">👥</span><span>Customers</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'reports' %} active{% endif %}" href="{{ url_for('analytics_reports') }}">
+      <span class="ico">📊</span><span>Reports</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'alerts' %} active{% endif %}" href="{{ url_for('analytics_alerts') }}">
+      <span class="ico">🔔</span><span>Alerts</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'model' %} active{% endif %}" href="#">
+      <span class="ico">🧠</span><span>Model Performance</span>
+    </a>
+    <a class="a-nav-item{% if analytics_nav == 'settings' %} active{% endif %}" href="#">
+      <span class="ico">⚙️</span><span>Settings</span>
+    </a>
+  </nav>
+
+  <div class="a-promo">
+    <div class="a-promo-art">
+      <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+      <div class="bar b1"></div><div class="bar b2"></div><div class="bar b3"></div>
+    </div>
+    <div class="a-promo-text">
+      <div class="t1">Smart Decisions</div>
+      <div class="t2">Better Loans</div>
+      <div class="t3">Leverage analytics to make accurate decisions.</div>
+    </div>
+    <a class="a-btn a-btn-secondary" href="{{ url_for('analytics_reports') }}">View Reports</a>
+  </div>
+
+  <div class="a-profile">
+    <div class="avatar">AU</div>
+    <div class="meta">
+      <div class="name">Admin User</div>
+      <div class="email">{{ (session.get('user_name') or 'user') | lower }}@loanpredict.com</div>
+    </div>
+    <div class="chev">▾</div>
+  </div>
+</aside>

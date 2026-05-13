@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}LoanPredict Analytics{% endblock %}
+{% block body_class %}analytics-shell{% endblock %}
+
+{% block content %}
+<div class="analytics">
+  {% include "includes/analytics_sidebar.html" %}
+
+  <section class="a-main">
+    {% include "includes/analytics_topbar.html" %}
+
+    <div class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-ico">📄</div>
+        <div class="kpi-body">
+          <div class="kpi-title">Total Applications</div>
+          <div class="kpi-value" id="kpiTotal">—</div>
+          <div class="kpi-sub"><span class="pos" id="kpiTotalGrow">+0%</span> vs last month</div>
+        </div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-ico">✅</div>
+        <div class="kpi-body">
+          <div class="kpi-title">Approved Loans</div>
+          <div class="kpi-value" id="kpiApproved">—</div>
+          <div class="kpi-sub"><span class="pos" id="kpiApprovedGrow">+0%</span> vs last month</div>
+        </div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-ico">⛔</div>
+        <div class="kpi-body">
+          <div class="kpi-title">Rejected Loans</div>
+          <div class="kpi-value" id="kpiRejected">—</div>
+          <div class="kpi-sub"><span class="neg" id="kpiRejectedGrow">+0%</span> vs last month</div>
+        </div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-ico">💰</div>
+        <div class="kpi-body">
+          <div class="kpi-title">Total Loan Amount</div>
+          <div class="kpi-value" id="kpiAmount">—</div>
+          <div class="kpi-sub"><span class="pos" id="kpiAmountGrow">+0%</span> vs last month</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-main">
+      <section class="cardx span-7">
+        <div class="cardx-head">
+          <div>
+            <div class="h">Loan Applications Trend</div>
+            <div class="s">Applications, approved, rejected</div>
+          </div>
+          <select class="select" id="trendFilter">
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <canvas id="trendChart" height="130"></canvas>
+      </section>
+
+      <section class="cardx span-3">
+        <div class="cardx-head">
+          <div class="h">Loan Approval Rate</div>
+          <div class="s">Approved vs rejected</div>
+        </div>
+        <div class="donut-wrap">
+          <canvas id="donutChart" height="190"></canvas>
+          <div class="donut-center">
+            <div class="pct" id="approvalPct">—%</div>
+            <div class="lbl">Approval Rate</div>
+          </div>
+        </div>
+        <div class="legend">
+          <div><span class="sw approved"></span>Approved <strong id="donutApproved">—</strong></div>
+          <div><span class="sw rejected"></span>Rejected <strong id="donutRejected">—</strong></div>
+          <div class="muted">Total <strong id="donutTotal">—</strong></div>
+        </div>
+      </section>
+
+      <section class="cardx span-2">
+        <div class="cardx-head">
+          <div class="h">Key Insights</div>
+          <div class="s">Intelligent summary</div>
+        </div>
+        <div class="insights" id="insights"></div>
+      </section>
+    </div>
+
+    <div class="grid-row2">
+      <section class="cardx span-4">
+        <div class="cardx-head">
+          <div class="h">Applications by Region</div>
+          <div class="s">India-based distribution</div>
+        </div>
+        <div class="india">
+          <svg viewBox="0 0 240 260" class="india-map" aria-label="India map panel">
+            <path class="india-sil" d="M124 10c20 9 34 25 42 44 6 14 14 26 26 34 8 6 12 14 9 23-4 11-16 19-22 30-6 11-3 22-8 33-5 12-16 22-22 34-5 9-3 17-9 26-7 11-22 23-36 21-14-2-20-16-29-25-10-10-23-15-31-27-10-16-8-35-5-53 4-20-5-36-6-55-1-18 8-31 21-42 13-11 25-29 50-23z"/>
+          </svg>
+          <div class="india-side">
+            <div class="mini-metric"><span>High</span><div class="barv"></div></div>
+            <div class="mini-metric"><span>Low</span><div class="barv low"></div></div>
+            <div class="muted" id="regionHint">Hover states appear when state data exists.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cardx span-4">
+        <div class="cardx-head">
+          <div class="h">Applicant Income Distribution</div>
+          <div class="s">Income ranges</div>
+        </div>
+        <canvas id="incomeChart" height="170"></canvas>
+      </section>
+
+      <section class="cardx span-4">
+        <div class="cardx-head">
+          <div class="h">Loan Purpose Distribution</div>
+          <div class="s">Category mix</div>
+        </div>
+        <canvas id="purposeChart" height="170"></canvas>
+      </section>
+
+      <section class="cardx span-4">
+        <div class="cardx-head">
+          <div class="h">Top Risk Factors</div>
+          <div class="s">Risk signals</div>
+        </div>
+        <div class="risk" id="riskFactors"></div>
+        <button class="a-btn a-btn-primary full" type="button">View All Risk Factors</button>
+      </section>
+    </div>
+
+    <section class="cardx">
+      <div class="cardx-head">
+        <div>
+          <div class="h">Recent Loan Applications</div>
+          <div class="s">Search, sort, paginate</div>
+        </div>
+        <div class="table-tools">
+          <input id="tableSearch" class="table-search" placeholder="Search…" />
+          <div class="pager">
+            <button class="iconbtn" id="prevPage" type="button">‹</button>
+            <span class="muted" id="pageLabel">1</span>
+            <button class="iconbtn" id="nextPage" type="button">›</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table" id="recentTable">
+          <thead>
+            <tr>
+              <th data-sort="application_id">Application ID</th>
+              <th data-sort="applicant_name">Applicant Name</th>
+              <th data-sort="loan_type">Loan Type</th>
+              <th data-sort="amount">Amount</th>
+              <th data-sort="status">Status</th>
+              <th data-sort="prediction">Prediction</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='analytics.js') }}"></script>
+{% endblock %}
+

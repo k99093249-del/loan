@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>User login</h1>
+  <form method="post" class="form-grid">
+    <label class="full">Email<input type="email" name="email" required /></label>
+    <label class="full">Password<input type="password" name="password" required /></label>
+    <div class="full actions"><button class="btn btn-primary" type="submit">Login</button></div>
+  </form>
+  <p class="muted">New here? <a href="{{ url_for('signup') }}">Create an account</a></p>
+</section>
+{% endblock %}

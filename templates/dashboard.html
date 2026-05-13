@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Your analytics</h1>
+  <p class="muted">Charts update from predictions you have submitted.</p>
+  <div class="dash-kpis">
+    <div class="mini glass"><span>Total</span><strong id="kpiTotal">0</strong></div>
+    <div class="mini glass"><span>Approvals</span><strong id="kpiApp">0</strong></div>
+    <div class="mini glass"><span>Rejections</span><strong id="kpiRej">0</strong></div>
+    <div class="mini glass"><span>Approval rate</span><strong id="kpiRate">0%</strong></div>
+  </div>
+</section>
+<section class="card">
+  <h2>Approvals vs rejections</h2>
+  <canvas id="chartMain" height="120"></canvas>
+</section>
+<section class="card">
+  <h2>Employment: Student, Employed &amp; Self Employed</h2>
+  <p class="muted">Bar chart shows approved vs rejected counts for each of the three employment types.</p>
+  <canvas id="chartEmp" height="160"></canvas>
+</section>
+<section class="card">
+  <h2>Predictions by property area</h2>
+  <canvas id="chartProp" height="140"></canvas>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

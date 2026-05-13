@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Data Overview — LoanPredict{% endblock %}
+{% block body_class %}analytics-shell{% endblock %}
+{% block content %}
+<div class="analytics">
+  {% include "includes/analytics_sidebar.html" %}
+  <section class="a-main">
+    {% include "includes/analytics_topbar.html" %}
+    <div class="subpage-head">
+      <h1>Data overview</h1>
+      <p class="muted">Dataset quality, schema, and basic distributions from <code>loan_prediction_500_dataset.xlsx</code>.</p>
+    </div>
+    <div class="sub-kpi-row">
+      <div class="cardx mini-stat"><div class="muted">Rows</div><div class="big">{{ n_rows }}</div></div>
+      <div class="cardx mini-stat"><div class="muted">Columns</div><div class="big">{{ n_cols }}</div></div>
+    </div>
+    <section class="cardx">
+      <div class="cardx-head"><div class="h">Column inventory</div><div class="s">Types, completeness, uniqueness</div></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Column</th><th>Dtype</th><th>Non-null %</th><th>Unique values</th></tr></thead>
+          <tbody>
+            {% for c in column_stats %}
+            <tr><td><strong>{{ c.name }}</strong></td><td>{{ c.dtype }}</td><td>{{ c.non_null_pct }}%</td><td>{{ c.n_unique }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <div class="grid-two">
+      <section class="cardx">
+        <div class="cardx-head"><div class="h">Numeric summary</div><div class="s">Mean / median / min / max</div></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Field</th><th>Mean</th><th>Median</th><th>Min</th><th>Max</th></tr></thead>
+            <tbody>
+              {% for s in numeric_summary %}
+              <tr>
+                <td>{{ s.name }}</td>
+                <td>{{ "{:,.2f}".format(s.mean) }}</td>
+                <td>{{ "{:,.2f}".format(s.median) }}</td>
+                <td>{{ "{:,.2f}".format(s.min) }}</td>
+                <td>{{ "{:,.2f}".format(s.max) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="cardx">
+        <div class="cardx-head"><div class="h">Loan status distribution</div><div class="s">Counts by status label</div></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Status</th><th>Count</th></tr></thead>
+            <tbody>
+              {% for r in status_counts %}
+              <tr><td>{{ r.status }}</td><td>{{ r.count }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}LoanPredict — Smart loan decisions{% endblock %}
+{% block body_class %}page-landing{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="pill">Smart finance intelligence • Real-time loan decisions</div>
+      <h1>Loan Prediction System</h1>
+      <p class="lead">
+        Predict loan approval instantly using machine learning and financial analytics.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="{{ url_for('signup') }}">Get Started</a>
+        <a class="btn btn-ghost" href="{{ url_for('login') }}?next={{ url_for('dashboard') }}">View Analytics</a>
+      </div>
+      <div class="trust-row">
+        <div class="trust-card">
+          <strong>Built for people</strong>
+          <span>Clear outcomes, transparent checks, and practical guidance.</span>
+        </div>
+        <div class="trust-card">
+          <strong>Secure by design</strong>
+          <span>Session-based access for your predictions and dashboard.</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="glass panel floating">
+        <div class="panel-header">
+          <span class="dot dot-c"></span><span class="dot dot-m"></span><span class="dot dot-y"></span>
+          <span class="panel-title">Approval analytics</span>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><span>Approval rate</span><strong id="demoRate">78%</strong></div>
+          <div class="kpi"><span>Risk score</span><strong>Low</strong></div>
+        </div>
+        <svg class="spark" viewBox="0 0 300 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0%" stop-color="#22d3ee" />
+              <stop offset="100%" stop-color="#a78bfa" />
+            </linearGradient>
+          </defs>
+          <path class="spark-line" d="M0,70 C40,20 80,80 120,40 S220,10 300,30" fill="none" stroke="url(#g1)" stroke-width="3" />
+        </svg>
+        <div class="mini-grid">
+          <div class="mini-card"><span>Approved</span><strong>62%</strong></div>
+          <div class="mini-card"><span>Rejected</span><strong>38%</strong></div>
+          <div class="mini-card"><span>FX</span><strong>Stable</strong></div>
+        </div>
+        <div class="pie-row">
+          <svg viewBox="0 0 36 36" class="pie">
+            <path class="pie-slice" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#22d3ee" stroke-width="4" stroke-dasharray="70, 100" />
+            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="#a78bfa" stroke-width="4" stroke-dasharray="30, 100" stroke-dashoffset="-70" />
+          </svg>
+          <div>
+            <div class="muted">Portfolio mix</div>
+            <div class="strong">Balanced risk</div>
+          </div>
+        </div>
+      </div>
+      <div class="float-badge b1">Insights</div>
+      <div class="float-badge b2">Secure</div>
+      <div class="float-badge b3">Fast</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Capabilities</h2>
+  <div class="feature-grid">
+    <article class="feature glass"><h3>Loan prediction</h3><p>Instant screening using your application inputs.</p></article>
+    <article class="feature glass"><h3>Credit risk signals</h3><p>High-level checks aligned with typical lending patterns.</p></article>
+    <article class="feature glass"><h3>Real-time analytics</h3><p>Personal dashboard charts after you run predictions.</p></article>
+    <article class="feature glass"><h3>Secure banking-style flow</h3><p>Authentication and sessions for your account.</p></article>
+    <article class="feature glass"><h3>Customer financial insights</h3><p>Charts for approvals, employment mix, and geography.</p></article>
+    <article class="feature glass"><h3>Fast approval prediction</h3><p>Submit once and download a decision PDF.</p></article>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div><strong>LoanPredict</strong><div class="muted">People-first loan screening demo.</div></div>
+    <div class="muted">© 2026</div>
+  </div>
+</footer>
+{% endblock %}

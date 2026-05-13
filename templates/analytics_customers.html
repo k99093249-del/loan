@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Customers — LoanPredict{% endblock %}
+{% block body_class %}analytics-shell{% endblock %}
+{% block content %}
+<div class="analytics">
+  {% include "includes/analytics_sidebar.html" %}
+  <section class="a-main">
+    {% include "includes/analytics_topbar.html" %}
+    <div class="subpage-head">
+      <h1>Customers</h1>
+      <p class="muted">Aggregated by applicant name: <strong>{{ unique_customers }}</strong> unique customers in the dataset (showing top 200 by application volume).</p>
+    </div>
+    <section class="cardx">
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Applications</th>
+              <th>Approved</th>
+              <th>Rejected</th>
+              <th>Approval %</th>
+              <th>Total loan (₹)</th>
+              <th>Avg income (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in customers %}
+            <tr>
+              <td><strong>{{ c.customer_name }}</strong></td>
+              <td>{{ c.applications }}</td>
+              <td>{{ c.approved | int }}</td>
+              <td>{{ c.rejected }}</td>
+              <td>{{ c.approval_rate_pct }}%</td>
+              <td>₹{{ c.total_loan_fmt }}</td>
+              <td>{% if c.avg_income_fmt != "—" %}₹{{ c.avg_income_fmt }}{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
+{% endblock %}

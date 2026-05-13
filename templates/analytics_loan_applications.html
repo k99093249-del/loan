@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Loan Applications — LoanPredict{% endblock %}
+{% block body_class %}analytics-shell{% endblock %}
+{% block content %}
+<div class="analytics">
+  {% include "includes/analytics_sidebar.html" %}
+  <section class="a-main">
+    {% include "includes/analytics_topbar.html" %}
+    <div class="subpage-head">
+      <h1>Loan applications</h1>
+      <p class="muted">All rows from the Excel dataset. Use search and pagination.</p>
+    </div>
+    <form class="filter-bar" method="get" action="{{ url_for('analytics_loan_applications') }}">
+      <input class="table-search" type="search" name="q" value="{{ search_q }}" placeholder="Search ID, name, state, loan type, status…" />
+      <input type="hidden" name="per_page" value="{{ per_page }}" />
+      <button class="a-btn a-btn-primary" type="submit">Search</button>
+      {% if search_q %}<a class="muted" href="{{ url_for('analytics_loan_applications') }}">Clear</a>{% endif %}
+    </form>
+    <p class="muted small">Showing {{ rows|length }} of {{ total_rows }} (page {{ page }} / {{ total_pages }})</p>
+    <section class="cardx">
+      <div class="table-wrap wide">
+        <table class="table compact">
+          <thead>
+            <tr>
+              <th>Application ID</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>State</th>
+              <th>Loan type</th>
+              <th>Amount (₹)</th>
+              <th>Income (₹)</th>
+              <th>Credit</th>
+              <th>Employment</th>
+              <th>Status</th>
+              <th>Prob.</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in rows %}
+            <tr>
+              <td>{{ r.application_id }}</td>
+              <td>{{ r.applicant_name }}</td>
+              <td>{{ r.age }}</td>
+              <td>{{ r.gender }}</td>
+              <td>{{ r.state }}</td>
+              <td>{{ r.loan_type }}</td>
+              <td>{{ "{:,.0f}".format(r.loan_amount) }}</td>
+              <td>{% if r.income is not none %}{{ "{:,.0f}".format(r.income) }}{% else %}—{% endif %}</td>
+              <td>{{ r.credit_score }}</td>
+              <td>{{ r.employment }}</td>
+              <td><span class="badge {% if r.loan_status|lower == 'approved' %}b-approved{% elif r.loan_status|lower == 'rejected' %}b-rejected{% else %}b-pending{% endif %}">{{ r.loan_status }}</span></td>
+              <td>{{ r.probability }}</td>
+              <td>{{ r.application_date }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="pager-bar">
+        {% if page > 1 %}
+        <a class="a-btn a-btn-secondary" href="{{ url_for('analytics_loan_applications', page=page-1, q=search_q, per_page=per_page) }}">Previous</a>
+        {% endif %}
+        {% if page < total_pages %}
+        <a class="a-btn a-btn-secondary" href="{{ url_for('analytics_loan_applications', page=page+1, q=search_q, per_page=per_page) }}">Next</a>
+        {% endif %}
+      </div>
+    </section>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
+{% endblock %}

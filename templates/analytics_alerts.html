@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Alerts — LoanPredict{% endblock %}
+{% block body_class %}analytics-shell{% endblock %}
+{% block content %}
+<div class="analytics">
+  {% include "includes/analytics_sidebar.html" %}
+  <section class="a-main">
+    {% include "includes/analytics_topbar.html" %}
+    <div class="subpage-head">
+      <h1>Alerts</h1>
+      <p class="muted">Rule-based signals from your dataset (states, credit vs amount, employment mix).</p>
+    </div>
+    <div class="alerts-grid">
+      {% for a in alerts %}
+      <article class="alert-card sev-{{ a.severity }}">
+        <div class="alert-sev">{{ a.severity | upper }}</div>
+        <h3>{{ a.title }}</h3>
+        <p>{{ a.detail }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
+{% endblock %}

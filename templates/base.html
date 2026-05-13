@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Loan Prediction{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+    <header class="topnav">
+      <a class="brand" href="{{ url_for('landing') }}">LoanPredict</a>
+      <nav class="navlinks">
+        <a href="{{ url_for('landing') }}">Home</a>
+        {% if session.get('user_id') %}
+        <a href="{{ url_for('predict') }}">Predict</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('analytics') }}">Analytics</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('signup') }}">Signup</a>
+        {% endif %}
+      </nav>
+      <button id="menuButton" class="btn btn-ghost" type="button" aria-label="Open menu">☰</button>
+    </header>
+    <div id="siteMenuOverlay" class="menu-overlay" aria-hidden="true">
+      <div class="menu-drawer" role="dialog" aria-label="Site menu">
+        <button id="menuCloseButton" class="btn btn-ghost menu-close" type="button" aria-label="Close menu">✕</button>
+        <nav class="drawer-nav">
+          <a href="{{ url_for('landing') }}">Home</a>
+          {% if session.get('user_id') %}
+          <a href="{{ url_for('predict') }}">Predict</a>
+          <a href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('analytics') }}">Analytics</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+          {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+          <a href="{{ url_for('signup') }}">Signup</a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
+    <main class="container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash">{{ messages[0] }}</div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+    <script>
+      const menuButton = document.getElementById('menuButton');
+      const menuOverlay = document.getElementById('siteMenuOverlay');
+      const menuClose = document.getElementById('menuCloseButton');
+
+      function openMenu() {
+        menuOverlay.classList.add('open');
+        menuOverlay.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeMenu() {
+        menuOverlay.classList.remove('open');
+        menuOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      menuButton?.addEventListener('click', openMenu);
+      menuClose?.addEventListener('click', closeMenu);
+      menuOverlay?.addEventListener('click', (event) => {
+        if (event.target === menuOverlay) closeMenu();
+      });
+    </script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

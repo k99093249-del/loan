@@ -1,0 +1,14 @@
+<header class="a-topbar">
+  <div class="search">
+    <span class="s-ico">🔎</span>
+    <input type="search" placeholder="Search anything…" name="q" value="{{ search_q or '' }}" {% if topbar_form_id %}form="{{ topbar_form_id }}"{% endif %} />
+  </div>
+  <div class="top-actions">
+    <button class="chip" type="button">
+      <span class="cal">🗓️</span>
+      <span>{{ date_range_label or 'Dataset range' }}</span>
+    </button>
+    <a class="iconbtn" href="{{ url_for('analytics_alerts') }}" title="Alerts">🔔</a>
+    <button class="iconbtn" type="button" title="Settings">⚙️</button>
+  </div>
+</header>

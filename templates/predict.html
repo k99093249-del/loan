@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}Predict — LoanPredict{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Loan prediction</h1>
+  <p class="muted">All monetary fields are in <strong>Indian Rupees (INR ₹)</strong>. Students need a <strong>college ID upload</strong>, an allowed <strong>part-time job</strong>, and <strong>applicant income between ₹3000 and ₹5000</strong>; when every rule passes, the loan is <strong>approved</strong> under the student policy.</p>
+
+  <form method="post" enctype="multipart/form-data" class="form-grid" id="predictForm">
+    <label>Gender
+      <select name="Gender" required>
+        <option>Male</option><option>Female</option>
+      </select>
+    </label>
+    <label>Married
+      <select name="Married" required>
+        <option>Yes</option><option>No</option>
+      </select>
+    </label>
+    <label>Dependents
+      <select name="Dependents" required>
+        <option>0</option><option>1</option><option>2</option><option>3+</option>
+      </select>
+    </label>
+    <label>Education
+      <select name="Education" required>
+        <option>Graduate</option><option>Not Graduate</option>
+      </select>
+    </label>
+    <label>Employment status
+      <select name="Employment_Status" id="employment" required>
+        <option value="Student">Student</option>
+        <option value="Employed">Employed</option>
+        <option value="Self Employed">Self Employed</option>
+      </select>
+    </label>
+    <label>Property area
+      <select name="Property_Area" required>
+        <option>Urban</option><option>Semiurban</option><option>Rural</option>
+      </select>
+    </label>
+
+    <label>Applicant income (INR ₹)
+      <input type="number" step="1" name="ApplicantIncome" id="appInc" placeholder="e.g., 5000" required />
+    </label>
+    <label>Coapplicant income (INR ₹)
+      <input type="number" step="1" name="CoapplicantIncome" id="coInc" value="0" placeholder="0 if none" required />
+    </label>
+
+    <label>Loan amount (INR ₹)
+      <input type="number" step="1" name="LoanAmount" id="loanAmt" placeholder="e.g., 100000" required />
+      <small class="help">Enter the <strong>full loan amount in Indian Rupees</strong> (e.g. type <strong>120000</strong> for ₹1,20,000). Optional shorthand: <strong>120</strong> is treated as <strong>₹1,20,000</strong> in this demo.</small>
+      <small class="help" id="loanExample"></small>
+    </label>
+    <label>Loan amount term (months)
+      <input type="number" step="1" name="Loan_Amount_Term" value="360" required />
+    </label>
+    <label>Credit history
+      <select name="Credit_History" required>
+        <option value="1">1 — meets history</option>
+        <option value="0">0 — does not meet</option>
+      </select>
+    </label>
+
+    <label class="full">Mobile number
+      <input name="Mobile_Number" inputmode="numeric" pattern="\d{10,15}" required />
+    </label>
+    <label class="full">Country
+      <input name="Country" required minlength="2" />
+    </label>
+    <label class="full">State
+      <input name="State" required minlength="2" />
+    </label>
+    <label class="full">Address
+      <textarea name="Address" rows="2" required minlength="2"></textarea>
+    </label>
+
+    <div id="studentBlock" class="full student-box" hidden>
+      <h3>Student loan requirements</h3>
+      <p class="muted">Upload your <strong>college ID card</strong>, choose your <strong>part-time job</strong> (food service, shop keeping, xerox shop, or other), and keep <strong>applicant income between ₹3000 and ₹5000</strong>. If all checks pass, the decision is <strong>Approved</strong>.</p>
+      <label>Part-time job
+        <select name="Student_Part_Time_Job" id="studentJob">
+          <option value="">Select…</option>
+          <option>Food Servent</option>
+          <option>Shop Keeping</option>
+          <option>Xerox Shop</option>
+          <option>Other</option>
+        </select>
+      </label>
+      <label>College ID card (PDF/JPG/PNG)
+        <input type="file" name="Student_ID_Proof" id="studentFile" accept=".pdf,.png,.jpg,.jpeg" />
+      </label>
+      <p class="muted">Allowed jobs: Food Servent, Shop Keeping, Xerox Shop, Other.</p>
+    </div>
+
+    <div class="full actions">
+      <button class="btn btn-primary" type="submit">Predict</button>
+    </div>
+  </form>
+</section>
+
+{% if result %}
+<section class="card result">
+  <h2>Result</h2>
+  <div class="badge {{ 'ok' if result.final_label == 'Y' else 'bad' }}">
+    {{ 'Approved' if result.final_label == 'Y' else 'Rejected' }}
+  </div>
+  {% if result.approval_proba is not none %}
+    <p>Estimated approval chance: <strong>{{ '%.1f'|format(result.approval_proba * 100) }}%</strong></p>
+  {% endif %}
+  {% if result.reasons %}
+    <h3>Reasons (high-level)</h3>
+    <ul>{% for r in result.reasons %}<li>{{ r }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if result.prediction_id %}
+    <a class="btn btn-ghost" href="{{ url_for('download_decision', prediction_id=result.prediction_id) }}">Download decision PDF</a>
+  {% endif %}
+</section>
+{% endif %}
+
+<script>
+  const emp = document.getElementById('employment');
+  const studentBlock = document.getElementById('studentBlock');
+  const studentFile = document.getElementById('studentFile');
+  const studentJob = document.getElementById('studentJob');
+  const appInc = document.getElementById('appInc');
+  const loanAmt = document.getElementById('loanAmt');
+  const loanExample = document.getElementById('loanExample');
+
+  function syncStudent() {
+    const on = emp.value === 'Student';
+    studentBlock.hidden = !on;
+    studentFile.required = on;
+    studentJob.required = on;
+  }
+  emp.addEventListener('change', syncStudent);
+  syncStudent();
+
+  function updateLoanExample() {
+    const inc = Number(appInc.value || 0);
+    const co = Number(document.getElementById('coInc').value || 0);
+    const total = inc + co;
+    if (total > 0) {
+      const sug = Math.round(total * 20);
+      loanExample.textContent = `Example (INR): total income ₹${total} → illustrative loan amount around ₹${sug}.`;
+    } else {
+      loanExample.textContent = '';
+    }
+  }
+  appInc.addEventListener('input', updateLoanExample);
+  document.getElementById('coInc').addEventListener('input', updateLoanExample);
+  updateLoanExample();
+</script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Reports — LoanPredict{% endblock %}
+{% block body_class %}analytics-shell{% endblock %}
+{% block content %}
+<div class="analytics">
+  {% include "includes/analytics_sidebar.html" %}
+  <section class="a-main">
+    {% include "includes/analytics_topbar.html" %}
+    <div class="subpage-head">
+      <h1>Reports</h1>
+      <p class="muted">Executive summary generated from the Excel dataset.</p>
+    </div>
+    <div class="sub-kpi-row four">
+      <div class="cardx mini-stat"><div class="muted">Total applications</div><div class="big">{{ summary.total }}</div></div>
+      <div class="cardx mini-stat"><div class="muted">Approved</div><div class="big">{{ summary.approved }}</div></div>
+      <div class="cardx mini-stat"><div class="muted">Rejected</div><div class="big">{{ summary.rejected }}</div></div>
+      <div class="cardx mini-stat"><div class="muted">Approval rate</div><div class="big">{{ summary.approval_rate_pct }}%</div></div>
+    </div>
+    <div class="cardx mini-stat full">
+      <div class="muted">Total disbursed / requested amount (sum)</div>
+      <div class="big">₹{{ "{:,.0f}".format(summary.total_loan_amount) }}</div>
+    </div>
+    <div class="grid-two">
+      <section class="cardx">
+        <div class="cardx-head"><div class="h">Top states</div><div class="s">By application volume</div></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>State</th><th>Applications</th></tr></thead>
+            <tbody>
+              {% for r in top_states %}
+              <tr><td>{{ r.state }}</td><td>{{ r.applications }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="cardx">
+        <div class="cardx-head"><div class="h">Top loan types</div><div class="s">By application volume</div></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Loan type</th><th>Applications</th></tr></thead>
+            <tbody>
+              {% for r in top_types %}
+              <tr><td>{{ r.loan_type }}</td><td>{{ r.applications }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+    <section class="cardx">
+      <div class="cardx-head"><div class="h">Monthly activity</div><div class="s">Applications, approved, rejected</div></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Month</th><th>Applications</th><th>Approved</th><th>Rejected</th></tr></thead>
+          <tbody>
+            {% for r in monthly %}
+            <tr><td>{{ r.month }}</td><td>{{ r.applications }}</td><td>{{ r.approved }}</td><td>{{ r.rejected }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
+{% endblock %}
